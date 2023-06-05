@@ -1,22 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SkipperWebApi.EfCore;
-using SkipperWebApi.Model;
 using SkipperBack3.EFCore;
 using SkipperBack3.Model;
+using SkipperWebApi.Model;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SkipperWebApi.Controllers
 {
-
     [ApiController]
     public class ShoppingApiController : ControllerBase
     {
         private readonly DbHelper _db;
+
         public ShoppingApiController(EF_DataContext eF_DataContext)
         {
             _db = new DbHelper(eF_DataContext);
         }
+
         // GET: api/<ShoppingApiController>
         [HttpGet]
         [Route("api/[controller]/GetProducts")]
@@ -83,7 +83,6 @@ namespace SkipperWebApi.Controllers
         [Route("api/[controller]/UpdateOrder")]
         public IActionResult Put([FromBody] OrderModel model)
         {
-
             try
             {
                 ResponseType type = ResponseType.Success;
@@ -106,6 +105,27 @@ namespace SkipperWebApi.Controllers
                 ResponseType type = ResponseType.Success;
                 _db.DeleteOrder(id);
                 return Ok(ResponseHandler.GetAppResponse(type, "Delete Successfully"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+        }
+
+        /// <summary>
+        /// Добавление пользователя в БД
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/[controller]/Register")]
+        public IActionResult AddUser([FromBody] User user)
+        {
+            try
+            {
+                ResponseType type = ResponseType.Success;
+                _db.SaveUser(user);
+                return Ok(ResponseHandler.GetAppResponse(type, user));
             }
             catch (Exception ex)
             {

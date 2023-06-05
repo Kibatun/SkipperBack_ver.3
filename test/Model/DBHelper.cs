@@ -7,10 +7,12 @@ namespace SkipperWebApi.Model
     public class DbHelper
     {
         private EF_DataContext _context;
+
         public DbHelper(EF_DataContext context)
         {
             _context = context;
         }
+
         /// <summary>
         /// GET
         /// </summary>
@@ -29,6 +31,7 @@ namespace SkipperWebApi.Model
             }));
             return response;
         }
+
         public ProductModel GetProductById(int id)
         {
             ProductModel response = new ProductModel();
@@ -42,6 +45,7 @@ namespace SkipperWebApi.Model
                 size = row.size
             };
         }
+
         /// <summary>
         /// It serves the POST/PUT/PATCH
         /// </summary>
@@ -69,6 +73,7 @@ namespace SkipperWebApi.Model
             }
             _context.SaveChanges();
         }
+
         /// <summary>
         /// DELETE
         /// </summary>
@@ -81,6 +86,40 @@ namespace SkipperWebApi.Model
                 _context.Orders.Remove(order);
                 _context.SaveChanges();
             }
+        }
+
+        public void SaveUser(User user)
+        {
+            User userTable = new User();
+            if (user.Uid != Guid.Empty)
+            {
+                //PUT
+                userTable = _context.Users.Where(x => x.Uid.Equals(user.Uid)).FirstOrDefault();
+                if (userTable != null)
+                {
+                    throw new Exception("Пользователь с такими данными существует");
+                }
+            }
+            else
+            {
+                //POST
+                userTable.Uid = Guid.NewGuid();
+                userTable.Email = user.Email;
+                userTable.PasswordHash = user.PasswordHash;
+                userTable.FirstName = user.FirstName;
+                userTable.LastName = user.LastName;
+                userTable.IsMenor = user.IsMenor;
+                userTable.Bio = user.Bio;
+                userTable.Post = user.Post;
+                userTable.Avatar = user.Avatar;
+                userTable.Rating = user.Rating;
+                userTable.ReviewsCount = user.ReviewsCount;
+                userTable.UpdatedAt = user.UpdatedAt;
+                userTable.CreatedAt = user.CreatedAt;
+                //userTable.LastName= _context.Products.Where(f => f.id.Equals(user.product_id)).FirstOrDefault();
+                //_context.Orders.Add(userTable);
+            }
+            _skipperContext.SaveChanges();
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class UserModel
 {
-    public string Uid { get; set; } = null!;
+    public Guid Uid { get; set; } = Guid.Empty;
     public string Email { get; set; } = null!;
 
     public string PasswordHash { get; set; } = null!;
