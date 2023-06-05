@@ -1,6 +1,6 @@
-﻿using ShoppingWebApi.EfCore;
+﻿using SkipperWebApi.EfCore;
 
-namespace test.Model
+namespace SkipperBack3.Model
 {
     public class OrderModel
     {

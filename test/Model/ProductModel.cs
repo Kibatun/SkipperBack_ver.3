@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace test.Model
+namespace SkipperBack3.Model
 {
     public class ProductModel
     {

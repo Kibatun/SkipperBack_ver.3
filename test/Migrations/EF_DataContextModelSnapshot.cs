@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using test.EFCore;
+using SkipperBack3.EFCore;
 
 #nullable disable
 
-namespace test.Migrations
+namespace SkipperBack3.Migrations
 {
     [DbContext(typeof(EF_DataContext))]
     partial class EF_DataContextModelSnapshot : ModelSnapshot
@@ -21,7 +21,7 @@ namespace test.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ShoppingWebApi.EfCore.Order", b =>
+            modelBuilder.Entity("SkipperWebApi.EfCore.Order", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,7 @@ namespace test.Migrations
                     b.ToTable("order");
                 });
 
-            modelBuilder.Entity("ShoppingWebApi.EfCore.Product", b =>
+            modelBuilder.Entity("SkipperWebApi.EfCore.Product", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -78,9 +78,9 @@ namespace test.Migrations
                     b.ToTable("product");
                 });
 
-            modelBuilder.Entity("ShoppingWebApi.EfCore.Order", b =>
+            modelBuilder.Entity("SkipperWebApi.EfCore.Order", b =>
                 {
-                    b.HasOne("ShoppingWebApi.EfCore.Product", "Product")
+                    b.HasOne("SkipperWebApi.EfCore.Product", "Product")
                         .WithMany()
                         .HasForeignKey("Productid")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -1,4 +1,4 @@
-﻿namespace SkipperBack2.Model
+﻿namespace SkipperBack3.Model
 {
     public class UserModel
 {

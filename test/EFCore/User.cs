@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SkipperBack2.EFCore
+namespace SkipperBack3.EFCore
 {
     [Table("user")]
     public class User

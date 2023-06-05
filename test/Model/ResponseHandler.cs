@@ -1,4 +1,4 @@
-﻿namespace ShoppingWebApi.Model
+﻿namespace SkipperWebApi.Model
 {
     public class ResponseHandler
     {

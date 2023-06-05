@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using test.EFCore;
+using SkipperBack3.EFCore;
 
 var builder = WebApplication.CreateBuilder(args);
 

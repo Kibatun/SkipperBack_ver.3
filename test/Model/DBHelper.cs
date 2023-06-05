@@ -1,8 +1,8 @@
-﻿using ShoppingWebApi.EfCore;
-using test.EFCore;
-using test.Model;
+﻿using SkipperBack3.EFCore;
+using SkipperBack3.Model;
+using SkipperWebApi.EfCore;
 
-namespace ShoppingWebApi.Model
+namespace SkipperWebApi.Model
 {
     public class DbHelper
     {

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace test.Migrations
+namespace SkipperBack3.Migrations
 {
     /// <inheritdoc />
     public partial class UpdateReference : Migration

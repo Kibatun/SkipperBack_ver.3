@@ -1,9 +1,9 @@
-﻿using ShoppingWebApi.EfCore;
+﻿using SkipperWebApi.EfCore;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using SkipperBack2.EFCore;
+using SkipperBack3.EFCore;
 
-namespace test.EFCore
+namespace SkipperBack3.EFCore
 {
     public class EF_DataContext : DbContext
     {

@@ -3,7 +3,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace test.Migrations
+namespace SkipperBack3.Migrations
 {
     /// <inheritdoc />
     public partial class InitialDatabase : Migration

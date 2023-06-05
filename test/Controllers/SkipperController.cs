@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ShoppingWebApi.EfCore;
-using ShoppingWebApi.Model;
-using test.EFCore;
-using test.Model;
+using SkipperWebApi.EfCore;
+using SkipperWebApi.Model;
+using SkipperBack3.EFCore;
+using SkipperBack3.Model;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ShoppingWebApi.Controllers
+namespace SkipperWebApi.Controllers
 {
 
     [ApiController]
