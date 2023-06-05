@@ -132,5 +132,6 @@ namespace SkipperWebApi.Controllers
                 return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
         }
+        //TODO: Не добавляется в БД, но обрабатывается
     }
 }

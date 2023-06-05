@@ -119,7 +119,7 @@ namespace SkipperWebApi.Model
                 //userTable.LastName= _context.Products.Where(f => f.id.Equals(user.product_id)).FirstOrDefault();
                 //_context.Orders.Add(userTable);
             }
-            _skipperContext.SaveChanges();
+            _context.SaveChanges();
         }
     }
 }

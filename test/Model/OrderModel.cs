@@ -1,5 +1,4 @@
-﻿using SkipperWebApi.EfCore;
-
+﻿
 namespace SkipperBack3.Model
 {
     public class OrderModel
