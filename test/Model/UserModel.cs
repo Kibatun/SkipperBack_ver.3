@@ -1,6 +1,7 @@
 ﻿
 namespace SkipperBack3.EFCore
 {
+    //Вероятно потом удалить
     public class UserModel
     {
         public Guid Uid { get; set; } = Guid.Empty;

@@ -88,38 +88,30 @@ namespace SkipperWebApi.Model
             }
         }
 
-        public void SaveUser(User user)
+        public bool SaveUser(User user)
         {
-            User userTable = new User();
+            if (_context.Users.Any(x => x.Email.Equals(user.Email)))
+                throw new Exception("Пользователь с такой почтой уже зарегестрирован");
             if (user.Uid != Guid.Empty)
             {
-                //PUT
-                userTable = _context.Users.Where(x => x.Uid.Equals(user.Uid)).FirstOrDefault();
-                if (userTable != null)
-                {
+                if (_context.Users.Any(x => x.Uid.Equals(user.Uid)))//.FirstOrDefault() != null)
                     throw new Exception("Пользователь с такими данными существует");
+                    //return false;
+                else
+                {
+                    user.PasswordHash = Utilities.GetHashString(user.PasswordHash);
+                    _context.Users.Add(user);
+                    _context.SaveChanges();
                 }
             }
             else
             {
-                //POST
-                userTable.Uid = Guid.NewGuid();
-                userTable.Email = user.Email;
-                userTable.PasswordHash = user.PasswordHash;
-                userTable.FirstName = user.FirstName;
-                userTable.LastName = user.LastName;
-                userTable.IsMenor = user.IsMenor;
-                userTable.Bio = user.Bio;
-                userTable.Post = user.Post;
-                userTable.Avatar = user.Avatar;
-                userTable.Rating = user.Rating;
-                userTable.ReviewsCount = user.ReviewsCount;
-                userTable.UpdatedAt = user.UpdatedAt;
-                userTable.CreatedAt = user.CreatedAt;
-                //userTable.LastName= _context.Products.Where(f => f.id.Equals(user.product_id)).FirstOrDefault();
-                //_context.Orders.Add(userTable);
+                user.PasswordHash = Utilities.GetHashString(user.PasswordHash);
+                _context.Users.Add(user);
+                user.Uid = Guid.NewGuid();
+                _context.SaveChanges();
             }
-            _context.SaveChanges();
+            return true;
         }
     }
 }

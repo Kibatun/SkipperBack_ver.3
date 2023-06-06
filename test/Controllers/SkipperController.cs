@@ -124,14 +124,28 @@ namespace SkipperWebApi.Controllers
             try
             {
                 ResponseType type = ResponseType.Success;
-                _db.SaveUser(user);
-                return Ok(ResponseHandler.GetAppResponse(type, user));
+                bool isSaved = _db.SaveUser(user);
+                if (isSaved)
+                    return Ok(ResponseHandler.GetAppResponse(type, user));
+                else return this.BadRequest();
             }
             catch (Exception ex)
             {
                 return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
         }
-        //TODO: Не добавляется в БД, но обрабатывается
+
+        /// <summary>
+        /// Вход пользователя
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/[controller]/Login")]
+        public IActionResult Login([FromBody] User user)
+        {
+
+        }
+
     }
 }
