@@ -144,8 +144,37 @@ namespace SkipperWebApi.Controllers
         [Route("api/[controller]/Login")]
         public IActionResult Login([FromBody] User user)
         {
-
+            try
+            {
+                ResponseType type = ResponseType.Success;
+                if (!_db.IsInputCorrect(user))
+                    throw new Exception("Неправвильное имя пользователя или пароль");
+                else
+                {
+                    string token = Utilities.GenerateToken(user.Email, "_da_ya_sosu_bibu1488");
+                    return Ok(new { token });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
         }
+        /*
+                [HttpPost]
+                [Route("api/[controller]/Logout")]
+                public IActionResult Logout([FromBody] User user)
+                {
+                    try
+                    {
+                        ResponseType type = ResponseType.Success;
+                        var token = GetToken();
+                        svc.Logout(token);
 
+                        return Ok();
+                    }
+
+                }
+                */
     }
 }

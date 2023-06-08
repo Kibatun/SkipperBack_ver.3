@@ -94,9 +94,8 @@ namespace SkipperWebApi.Model
                 throw new Exception("Пользователь с такой почтой уже зарегестрирован");
             if (user.Uid != Guid.Empty)
             {
-                if (_context.Users.Any(x => x.Uid.Equals(user.Uid)))//.FirstOrDefault() != null)
-                    throw new Exception("Пользователь с такими данными существует");
-                    //return false;
+                if (_context.Users.Any(x => x.Uid.Equals(user.Uid)))
+                    throw new Exception("Пользователь с таким UUID уже существует");
                 else
                 {
                     user.PasswordHash = Utilities.GetHashString(user.PasswordHash);
@@ -113,5 +112,13 @@ namespace SkipperWebApi.Model
             }
             return true;
         }
+        //TODO: Проверить, что данные, которые вводит пользователь совпадают с данными в БД. Если совпадения нет. то писать "Логин или пароль введены неправильно"
+        public bool IsInputCorrect(User user)
+        {
+            return _context.Users.Any(x => x.Email.Equals(user.Email) && x.PasswordHash.Equals(user.PasswordHash));
+        }
+
+        //public void LogoutЕ
+
     }
 }
