@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using SkipperBack3.EFCore;
 using SkipperBack3.Model;
-using SkipperWebApi.Model;
-
+using SkipperBack3.TokenUtils;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace SkipperWebApi.Controllers
+namespace SkipperBack3.Controllers
 {
     [ApiController]
     public class ShoppingApiController : ControllerBase
@@ -151,8 +151,13 @@ namespace SkipperWebApi.Controllers
                     throw new Exception("Неправвильное имя пользователя или пароль");
                 else
                 {
-                    string token = Utilities.GenerateToken(user.Email, "_da_ya_sosu_bibu1488");
-                    return Ok(new { token });
+                    string accessToken = TokenUtilities.GenerateToken(user.Email, "_da_ya_sosu_bibu1488");
+                    string refreshToken = TokenUtilities.GenerateRefreshToken();
+                    return Ok(new
+                    {
+                        access_token = accessToken,
+                        refresh_token = refreshToken
+                    });
                 }
             }
             catch (Exception ex)
@@ -160,21 +165,25 @@ namespace SkipperWebApi.Controllers
                 return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
         }
-        /*
-                [HttpPost]
-                [Route("api/[controller]/Logout")]
-                public IActionResult Logout([FromBody] User user)
-                {
-                    try
-                    {
-                        ResponseType type = ResponseType.Success;
-                        var token = GetToken();
-                        svc.Logout(token);
-
-                        return Ok();
-                    }
-
-                }
-                */
+        
+        [HttpPost]
+        [Route("api/[controller]/RefreshToken")]
+        public IActionResult RefreshToken([FromBody] RefreshToken refreshTokenRequest)
+        {
+            try
+            {
+                var refreshedAccessToken = RefreshToken(refreshTokenRequest.RefreshToken, "_da_ya_sosu_bibu1488");
+                return Ok(new { AccessToken = refreshedAccessToken });
+            }
+            catch (SecurityTokenException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        */
     }
 }

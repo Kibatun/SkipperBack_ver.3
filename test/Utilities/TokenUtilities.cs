@@ -1,26 +1,14 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using Microsoft.IdentityModel.Tokens;
+using SkipperBack3.Model;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
 
-
-namespace SkipperBack3.Model
+namespace SkipperBack3.TokenUtils
 {
-    public static class Utilities
+    public class TokenUtilities
     {
-        public static string GetHashString(string password)
-        {
-            byte[] bytes = Encoding.Unicode.GetBytes(password);
-            MD5CryptoServiceProvider CSP = new();
-            byte[] byteHash = CSP.ComputeHash(bytes);
-            string hash = string.Empty;
-            foreach (byte b in byteHash)
-                hash += string.Format("{0:x2}", b);
-            return hash;
-        }
-
-
         public static string GenerateToken(string login, string secretKey)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
@@ -31,7 +19,7 @@ namespace SkipperBack3.Model
             new Claim(ClaimTypes.Name, login),
             };
 
-            var token = new JwtSecurityToken(
+            JwtSecurityToken token = new JwtSecurityToken(
                 issuer: AuthOptions.ISSUER,
                 audience: AuthOptions.AUDIENCE,
                 claims: claims,
@@ -44,7 +32,15 @@ namespace SkipperBack3.Model
 
             return tokenString;
         }
+
+        public static string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        }
     }
 }
-
-/*System.ArgumentOutOfRangeException: 'IDX10653: The encryption algorithm 'System.String' requires a key size of at least 'System.Int32' bits. Key 'Microsoft.IdentityModel.Tokens.SymmetricSecurityKey', is of size: 'System.Int32'. Arg_ParamName_Name'*/

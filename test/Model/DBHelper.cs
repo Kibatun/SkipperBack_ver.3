@@ -1,8 +1,8 @@
 ﻿using SkipperBack3.EFCore;
-using SkipperBack3.Model;
-using SkipperWebApi.EfCore;
+using SkipperBack3.EfCore;
+using SkipperBack3.TokenUtils;
 
-namespace SkipperWebApi.Model
+namespace SkipperBack3.Model
 {
     public class DbHelper
     {
