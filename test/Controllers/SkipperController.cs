@@ -16,7 +16,7 @@ namespace SkipperBack3.Controllers
         {
             _db = new DbHelper(eF_DataContext);
         }
-
+        /*
         // GET: api/<ShoppingApiController>
         [HttpGet]
         [Route("api/[controller]/GetProducts")]
@@ -111,7 +111,7 @@ namespace SkipperBack3.Controllers
                 return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
         }
-
+        */
         /// <summary>
         /// Добавление пользователя в БД
         /// </summary>
@@ -165,7 +165,7 @@ namespace SkipperBack3.Controllers
                 return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
         }
-        
+        /*
         [HttpPost]
         [Route("api/[controller]/RefreshToken")]
         public IActionResult RefreshToken([FromBody] RefreshToken refreshTokenRequest)
