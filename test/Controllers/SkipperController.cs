@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using SkipperBack3.EFCore;
+using SkipperBack3.DBImport;
+//using SkipperBack3.EFCore;
 using SkipperBack3.Model;
 using SkipperBack3.TokenUtils;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -12,9 +13,9 @@ namespace SkipperBack3.Controllers
     {
         private readonly DbHelper _db;
 
-        public ShoppingApiController(EF_DataContext eF_DataContext)
+        public ShoppingApiController (ShopingPostgresContext skipper_DdataContext) /*(EF_DataContext eF_DataContext)*/
         {
-            _db = new DbHelper(eF_DataContext);
+            _db = new DbHelper(skipper_DdataContext);
         }
         /*
         // GET: api/<ShoppingApiController>

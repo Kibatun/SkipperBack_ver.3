@@ -1,18 +1,18 @@
-﻿using SkipperBack3.EFCore;
-using SkipperBack3.EfCore;
+﻿using SkipperBack3.DBImport;
+//using SkipperBack3.EFCore;
 using SkipperBack3.TokenUtils;
 
 namespace SkipperBack3.Model
 {
     public class DbHelper
     {
-        private EF_DataContext _context;
+        private ShopingPostgresContext _context/*EF_DataContext _context*/;
 
-        public DbHelper(EF_DataContext context)
+        public DbHelper (ShopingPostgresContext context)/*(EF_DataContext context)*/
         {
             _context = context;
         }
-
+        /*
         /// <summary>
         /// GET
         /// </summary>
@@ -87,7 +87,7 @@ namespace SkipperBack3.Model
                 _context.SaveChanges();
             }
         }
-
+        */
         public bool SaveUser(User user)
         {
             if (_context.Users.Any(x => x.Email.Equals(user.Email)))
@@ -98,14 +98,14 @@ namespace SkipperBack3.Model
                     throw new Exception("Пользователь с таким UUID уже существует");
                 else
                 {
-                    user.PasswordHash = Utilities.GetHashString(user.PasswordHash);
+                    user.Passwordhash = Utilities.GetHashString(user.Passwordhash);
                     _context.Users.Add(user);
                     _context.SaveChanges();
                 }
             }
             else
             {
-                user.PasswordHash = Utilities.GetHashString(user.PasswordHash);
+                user.Passwordhash = Utilities.GetHashString(user.Passwordhash);
                 _context.Users.Add(user);
                 user.Uid = Guid.NewGuid();
                 _context.SaveChanges();
@@ -115,7 +115,7 @@ namespace SkipperBack3.Model
         //TODO: Проверить, что данные, которые вводит пользователь совпадают с данными в БД. Если совпадения нет. то писать "Логин или пароль введены неправильно"
         public bool IsInputCorrect(User user)
         {
-            return _context.Users.Any(x => x.Email.Equals(user.Email) && x.PasswordHash.Equals(user.PasswordHash));
+            return _context.Users.Any(x => x.Email.Equals(user.Email) && x.Passwordhash.Equals(user.Passwordhash));
         }
 
         //public void LogoutЕ
