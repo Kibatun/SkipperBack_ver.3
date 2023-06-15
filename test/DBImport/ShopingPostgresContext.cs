@@ -35,23 +35,34 @@ public partial class ShopingPostgresContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("BookedLessons_pkey");
 
-            entity.HasIndex(e => e.Lessondurationid, "BookedLessons_lessondurationid_key").IsUnique();
-
-            entity.HasIndex(e => e.Messengerid, "BookedLessons_messengerid_key").IsUnique();
-
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Description).HasColumnName("description");
-            entity.Property(e => e.Lessondurationid).HasColumnName("lessondurationid");
-            entity.Property(e => e.Mentorid).HasColumnName("mentorid");
-            entity.Property(e => e.Messengerid).HasColumnName("messengerid");
-            entity.Property(e => e.Startdate).HasColumnName("startdate");
+            entity.Property(e => e.LessonDurationId).HasColumnName("lesson_duration_id");
+            entity.Property(e => e.MentorId).HasColumnName("mentor_id");
+            entity.Property(e => e.MessengerId).HasColumnName("messenger_id");
+            entity.Property(e => e.StartDate).HasColumnName("start_date");
             entity.Property(e => e.Title).HasColumnName("title");
             entity.Property(e => e.Type)
                 .HasDefaultValueSql("ARRAY['THEORY'::text, 'PRACTICE'::text, 'SOLUTION'::text]")
                 .HasColumnName("type");
-            entity.Property(e => e.Userid).HasColumnName("userid");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.LessonDuration).WithMany(p => p.BookedLessons)
+                .HasForeignKey(d => d.LessonDurationId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("BookedLessons_lesson_duration_id_fkey");
+
+            entity.HasOne(d => d.Messenger).WithMany(p => p.BookedLessons)
+                .HasForeignKey(d => d.MessengerId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("BookedLessons_messenger_id_fkey");
+
+            entity.HasOne(d => d.User).WithMany(p => p.BookedLessons)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("BookedLessons_user_id_fkey");
         });
 
         modelBuilder.Entity<LessonDuration>(entity =>
@@ -71,20 +82,19 @@ public partial class ShopingPostgresContext : DbContext
 
             entity.ToTable("MessengerInfo");
 
-            entity.HasIndex(e => e.Userid, "MessengerInfo_userid_key").IsUnique();
-
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Type)
                 .HasDefaultValueSql("ARRAY['Discord'::text, 'Telegram'::text, 'Skype'::text, 'VK'::text]")
                 .HasColumnName("type");
-            entity.Property(e => e.Userid).HasColumnName("userid");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.Value).HasColumnName("value");
 
-            entity.HasOne(d => d.User).WithOne(p => p.MessengerInfo)
-                .HasForeignKey<MessengerInfo>(d => d.Userid)
-                .HasConstraintName("MessengerInfo_userid_fkey");
+            entity.HasOne(d => d.User).WithMany(p => p.MessengerInfos)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("MessengerInfo_user_id_fkey");
         });
 
         modelBuilder.Entity<RefreshToken>(entity =>
@@ -94,15 +104,19 @@ public partial class ShopingPostgresContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
-            entity.Property(e => e.Expiresat)
+            entity.Property(e => e.CreatedAt)
                 .HasColumnType("timestamp without time zone")
-                .HasColumnName("expiresat");
-            entity.Property(e => e.Isexpired).HasColumnName("isexpired");
+                .HasColumnName("created_at");
+            entity.Property(e => e.ExpiresAt)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("expires_at");
+            entity.Property(e => e.IsExpired).HasColumnName("is_expired");
             entity.Property(e => e.Token).HasColumnName("token");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
 
-            entity.HasOne(d => d.TokenNavigation).WithMany(p => p.RefreshTokens)
-                .HasForeignKey(d => d.Token)
-                .HasConstraintName("RefreshTokens_token_fkey");
+            entity.HasOne(d => d.User).WithMany(p => p.RefreshTokens)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("RefreshTokens_user_id_fkey");
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -114,26 +128,26 @@ public partial class ShopingPostgresContext : DbContext
                 .HasColumnName("uid");
             entity.Property(e => e.Avatar).HasColumnName("avatar");
             entity.Property(e => e.Bio).HasColumnName("bio");
-            entity.Property(e => e.Createdat).HasColumnName("createdat");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.Email)
                 .HasMaxLength(255)
                 .HasColumnName("email");
-            entity.Property(e => e.Firstname)
+            entity.Property(e => e.FirstName)
                 .HasMaxLength(255)
-                .HasColumnName("firstname");
-            entity.Property(e => e.Ismentor)
+                .HasColumnName("first_name");
+            entity.Property(e => e.IsMentor)
                 .HasDefaultValueSql("false")
-                .HasColumnName("ismentor");
-            entity.Property(e => e.Lastname)
+                .HasColumnName("is_mentor");
+            entity.Property(e => e.LastName)
                 .HasMaxLength(255)
-                .HasColumnName("lastname");
-            entity.Property(e => e.Passwordhash)
+                .HasColumnName("last_name");
+            entity.Property(e => e.PasswordHash)
                 .HasMaxLength(255)
-                .HasColumnName("passwordhash");
+                .HasColumnName("password_hash");
             entity.Property(e => e.Post).HasColumnName("post");
             entity.Property(e => e.Rating).HasColumnName("rating");
-            entity.Property(e => e.Reviewscount).HasColumnName("reviewscount");
-            entity.Property(e => e.Updatedat).HasColumnName("updatedat");
+            entity.Property(e => e.ReviewsCount).HasColumnName("reviews_count");
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -9,13 +9,13 @@ public partial class User
 
     public string Email { get; set; } = null!;
 
-    public string Passwordhash { get; set; } = null!;
+    public string PasswordHash { get; set; } = null!;
 
-    public string Firstname { get; set; } = null!;
+    public string FirstName { get; set; } = null!;
 
-    public string Lastname { get; set; } = null!;
+    public string LastName { get; set; } = null!;
 
-    public bool? Ismentor { get; set; }
+    public bool? IsMentor { get; set; }
 
     public string Bio { get; set; } = null!;
 
@@ -25,13 +25,15 @@ public partial class User
 
     public double Rating { get; set; }
 
-    public int Reviewscount { get; set; }
+    public int ReviewsCount { get; set; }
 
-    public long Updatedat { get; set; }
+    public long UpdatedAt { get; set; }
 
-    public long Createdat { get; set; }
+    public long CreatedAt { get; set; }
 
-    public virtual MessengerInfo? MessengerInfo { get; set; }
+    public virtual ICollection<BookedLesson> BookedLessons { get; set; } = new List<BookedLesson>();
+
+    public virtual ICollection<MessengerInfo> MessengerInfos { get; set; } = new List<MessengerInfo>();
 
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }

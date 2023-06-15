@@ -7,11 +7,15 @@ public partial class RefreshToken
 {
     public Guid Id { get; set; }
 
-    public Guid Token { get; set; }
+    public string Token { get; set; } = null!;
 
-    public DateTime Expiresat { get; set; }
+    public Guid UserId { get; set; }
 
-    public bool? Isexpired { get; set; }
+    public DateTime ExpiresAt { get; set; }
 
-    public virtual User TokenNavigation { get; set; } = null!;
+    public DateTime CreatedAt { get; set; }
+
+    public bool? IsExpired { get; set; }
+
+    public virtual User User { get; set; } = null!;
 }

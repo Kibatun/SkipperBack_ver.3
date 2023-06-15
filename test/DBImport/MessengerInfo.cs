@@ -7,11 +7,13 @@ public partial class MessengerInfo
 {
     public Guid Id { get; set; }
 
-    public Guid Userid { get; set; }
+    public Guid? UserId { get; set; }
 
     public string? Type { get; set; }
 
     public string Value { get; set; } = null!;
 
-    public virtual User User { get; set; } = null!;
+    public virtual ICollection<BookedLesson> BookedLessons { get; set; } = new List<BookedLesson>();
+
+    public virtual User? User { get; set; }
 }

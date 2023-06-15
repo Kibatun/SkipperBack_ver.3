@@ -1,5 +1,4 @@
 ﻿using SkipperBack3.DBImport;
-//using SkipperBack3.EFCore;
 using SkipperBack3.TokenUtils;
 
 namespace SkipperBack3.Model
@@ -8,10 +7,11 @@ namespace SkipperBack3.Model
     {
         private ShopingPostgresContext _context/*EF_DataContext _context*/;
 
-        public DbHelper (ShopingPostgresContext context)/*(EF_DataContext context)*/
+        public DbHelper(ShopingPostgresContext context)/*(EF_DataContext context)*/
         {
             _context = context;
         }
+
         /*
         /// <summary>
         /// GET
@@ -88,7 +88,8 @@ namespace SkipperBack3.Model
             }
         }
         */
-        public bool SaveUser(User user)
+
+        public bool IsUserSaved(User user)
         {
             if (_context.Users.Any(x => x.Email.Equals(user.Email)))
                 throw new Exception("Пользователь с такой почтой уже зарегестрирован");
@@ -98,27 +99,55 @@ namespace SkipperBack3.Model
                     throw new Exception("Пользователь с таким UUID уже существует");
                 else
                 {
-                    user.Passwordhash = Utilities.GetHashString(user.Passwordhash);
+                    user.PasswordHash = Utilities.GetHashString(user.PasswordHash);
                     _context.Users.Add(user);
                     _context.SaveChanges();
                 }
             }
             else
             {
-                user.Passwordhash = Utilities.GetHashString(user.Passwordhash);
+                user.PasswordHash = Utilities.GetHashString(user.PasswordHash);
                 _context.Users.Add(user);
                 user.Uid = Guid.NewGuid();
                 _context.SaveChanges();
             }
             return true;
         }
-        //TODO: Проверить, что данные, которые вводит пользователь совпадают с данными в БД. Если совпадения нет. то писать "Логин или пароль введены неправильно"
-        public bool IsInputCorrect(User user)
+
+        public bool Authenticate(User user, out string accessToken)
         {
-            return _context.Users.Any(x => x.Email.Equals(user.Email) && x.Passwordhash.Equals(user.Passwordhash));
+            accessToken = null;
+            bool isAuthenticated = _context.Users.Any(x => x.Email.Equals(user.Email) && x.PasswordHash.Equals(user.PasswordHash));
+            if (isAuthenticated)
+            {
+                accessToken = TokenUtilities.GenerateAccessToken(user, "_da_ya_sosu_bibu1488");
+                var refreshToken = TokenUtilities.GenerateRefreshToken(user.Uid);
+                user.RefreshTokens.Add(refreshToken);
+                _context.Update(user);
+                return true;
+                /*
+                        //        RefreshToken existingRefreshToken = _context.RefreshTokens.FirstOrDefault(x => x.Id == user.Uid);
+                        //        if (existingRefreshToken != null)
+                        //        {
+                        //            existingRefreshToken.Token = refreshToken;
+                        //        }
+                        //        else
+                        //        {
+                        //            RefreshToken refreshTokenEntity = new RefreshToken
+                        //            {
+                        //                Token = refreshToken,
+                        //                //UserId = user.Uid
+                        //            };
+                        //            _context.RefreshTokens.Add(refreshTokenEntity);
+                        //        }
+                        //        _context.SaveChanges();
+
+                        //        return true;
+                        //    }
+                        */
+            }
+
+            return false;
         }
-
-        //public void LogoutЕ
-
     }
 }

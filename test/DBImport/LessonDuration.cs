@@ -10,4 +10,6 @@ public partial class LessonDuration
     public string Name { get; set; } = null!;
 
     public int Duration { get; set; }
+
+    public virtual ICollection<BookedLesson> BookedLessons { get; set; } = new List<BookedLesson>();
 }

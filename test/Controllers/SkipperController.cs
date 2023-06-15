@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SkipperBack3.DBImport;
 //using SkipperBack3.EFCore;
@@ -15,7 +16,7 @@ namespace SkipperBack3.Controllers
 
         public ShoppingApiController (ShopingPostgresContext skipper_DdataContext) /*(EF_DataContext eF_DataContext)*/
         {
-            _db = new DbHelper(skipper_DdataContext);
+            _db = new DbHelper(skipper_DdataContext);//(eF_DataContext);
         }
         /*
         // GET: api/<ShoppingApiController>
@@ -125,7 +126,7 @@ namespace SkipperBack3.Controllers
             try
             {
                 ResponseType type = ResponseType.Success;
-                bool isSaved = _db.SaveUser(user);
+                bool isSaved = _db.IsUserSaved(user);
                 if (isSaved)
                     return Ok(ResponseHandler.GetAppResponse(type, user));
                 else return this.BadRequest();
@@ -148,23 +149,26 @@ namespace SkipperBack3.Controllers
             try
             {
                 ResponseType type = ResponseType.Success;
-                if (!_db.IsInputCorrect(user))
-                    throw new Exception("Неправвильное имя пользователя или пароль");
-                else
-                {
-                    string accessToken = TokenUtilities.GenerateToken(user.Email, "_da_ya_sosu_bibu1488");
-                    string refreshToken = TokenUtilities.GenerateRefreshToken();
-                    return Ok(new
+                Guid refreshToken;
+                Guid accesToken;
+
+                //if (!_db.Authenticate(user, out accesToken))
+                 //   throw new Exception("Неправвильное имя пользователя или пароль");
+                //else
+                //{
+                
+                return Ok(new
                     {
-                        access_token = accessToken,
-                        refresh_token = refreshToken
+                        access_token = accesToken
                     });
-                }
+                //}
             }
             catch (Exception ex)
             {
+                throw new Exception("Неправвильное имя пользователя или пароль")
                 return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
+                
         }
         /*
         [HttpPost]

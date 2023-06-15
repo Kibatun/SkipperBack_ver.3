@@ -1,5 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using SkipperBack3.Model;
+using SkipperBack3.DBImport;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -9,37 +9,43 @@ namespace SkipperBack3.TokenUtils
 {
     public class TokenUtilities
     {
-        public static string GenerateToken(string login, string secretKey)
+        public static string GenerateAccessToken(User user, string secretKey)
         {
+            var tokenHandler = new JwtSecurityTokenHandler();
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
+            var tokenDesctiptor = new SecurityTokenDescriptor
             {
-            new Claim(ClaimTypes.Name, login),
+                Subject = new ClaimsIdentity(new[]
+                {
+                new Claim("uuid", user.Uid.ToString()),
+                new Claim("email", user.Email),
+                new Claim("firstName", user.FirstName),
+                new Claim("lastName", user.LastName)
+                }),
+                Expires = DateTime.UtcNow.AddMonths(1),
+                SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
             };
 
-            JwtSecurityToken token = new JwtSecurityToken(
-                issuer: AuthOptions.ISSUER,
-                audience: AuthOptions.AUDIENCE,
-                claims: claims,
-                expires: DateTime.UtcNow.AddMonths(1),
-                signingCredentials: credentials
-            );
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenString = tokenHandler.WriteToken(token);
-
-            return tokenString;
+            var accesToken = tokenHandler.CreateToken(tokenDesctiptor);
+            return tokenHandler.WriteToken(accesToken);
         }
 
-        public static string GenerateRefreshToken()
+        public static RefreshToken GenerateRefreshToken(Guid uid)
         {
-            var randomNumber = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
+            var refreshToken = new RefreshToken
             {
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
+                Token = GenerateRefreshToken(),
+                ExpiresAt = DateTime.UtcNow.AddDays(180),
+                CreatedAt = DateTime.UtcNow,
+                UserId = uid
+            };
+
+            return refreshToken;
+
+            static string GenerateRefreshToken()
+            {
+                var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+                return token;
             }
         }
     }
