@@ -1,5 +1,7 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SkipperBack3.DBImport;
+using SkipperBack3.Model;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -9,8 +11,9 @@ namespace SkipperBack3.TokenUtils
 {
     public class TokenUtilities
     {
-        public static string GenerateAccessToken(User user, string secretKey)
+        public static string GenerateAccessToken(User user)
         {
+            var secretKey = AuthOptions.KEY;
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var tokenDesctiptor = new SecurityTokenDescriptor
@@ -34,9 +37,10 @@ namespace SkipperBack3.TokenUtils
         {
             var refreshToken = new RefreshToken
             {
+                Id = Guid.NewGuid(),
                 Token = GenerateRefreshToken(),
-                ExpiresAt = DateTime.UtcNow.AddDays(180),
-                CreatedAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.Now.AddDays(180),
+                CreatedAt = DateTime.Now,
                 UserId = uid
             };
 
@@ -46,6 +50,32 @@ namespace SkipperBack3.TokenUtils
             {
                 var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
                 return token;
+            }
+        }
+
+        public static bool isTokenValid(string accessToken)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(AuthOptions.KEY);
+
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+
+            try
+            {
+                SecurityToken validatedToken;
+                tokenHandler.ValidateToken(accessToken, validationParameters, out validatedToken);
+                return true;
+            }
+            catch
+            {
+                // Валидация токена не удалась
+                return false;
             }
         }
     }

@@ -110,7 +110,7 @@ public partial class ShopingPostgresContext : DbContext
             entity.Property(e => e.ExpiresAt)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("expires_at");
-            entity.Property(e => e.IsExpired).HasColumnName("is_expired");
+            entity.Property(e => e.IsRevoked).HasColumnName("is_revoked");
             entity.Property(e => e.Token).HasColumnName("token");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 

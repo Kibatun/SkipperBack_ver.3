@@ -5,6 +5,7 @@ using SkipperBack3.DBImport;
 //using SkipperBack3.EFCore;
 using SkipperBack3.Model;
 using SkipperBack3.TokenUtils;
+using Swashbuckle.AspNetCore.Annotations;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SkipperBack3.Controllers
@@ -18,102 +19,6 @@ namespace SkipperBack3.Controllers
         {
             _db = new DbHelper(skipper_DdataContext);//(eF_DataContext);
         }
-        /*
-        // GET: api/<ShoppingApiController>
-        [HttpGet]
-        [Route("api/[controller]/GetProducts")]
-        public IActionResult Get()
-        {
-            ResponseType type = ResponseType.Success;
-            try
-            {
-                IEnumerable<ProductModel> data = _db.GetProducts();
-
-                if (!data.Any())
-                {
-                    type = ResponseType.NotFound;
-                }
-                return Ok(ResponseHandler.GetAppResponse(type, data));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
-            }
-        }
-
-        // GET api/<ShoppingApiController>/5
-        [HttpGet]
-        [Route("api/[controller]/GetProductById/{id}")]
-        public IActionResult Get(int id)
-        {
-            ResponseType type = ResponseType.Success;
-            try
-            {
-                ProductModel data = _db.GetProductById(id);
-
-                if (data == null)
-                {
-                    type = ResponseType.NotFound;
-                }
-                return Ok(ResponseHandler.GetAppResponse(type, data));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
-            }
-        }
-
-        // POST api/<ShoppingApiController>
-        [HttpPost]
-        [Route("api/[controller]/SaveOrder")]
-        public IActionResult Post([FromBody] OrderModel model)
-        {
-            try
-            {
-                ResponseType type = ResponseType.Success;
-                _db.SaveOrder(model);
-                return Ok(ResponseHandler.GetAppResponse(type, model));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
-            }
-        }
-
-        // PUT api/<ShoppingApiController>/5
-        [HttpPut]
-        [Route("api/[controller]/UpdateOrder")]
-        public IActionResult Put([FromBody] OrderModel model)
-        {
-            try
-            {
-                ResponseType type = ResponseType.Success;
-                _db.SaveOrder(model);
-                return Ok(ResponseHandler.GetAppResponse(type, model));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
-            }
-        }
-
-        // DELETE api/<ShoppingApiController>/5
-        [HttpDelete]
-        [Route("api/[controller]/DeleteOrder/{id}")]
-        public IActionResult Delete(int id)
-        {
-            try
-            {
-                ResponseType type = ResponseType.Success;
-                _db.DeleteOrder(id);
-                return Ok(ResponseHandler.GetAppResponse(type, "Delete Successfully"));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
-            }
-        }
-        */
         /// <summary>
         /// Добавление пользователя в БД
         /// </summary>
@@ -149,46 +54,40 @@ namespace SkipperBack3.Controllers
             try
             {
                 ResponseType type = ResponseType.Success;
-                Guid refreshToken;
-                Guid accesToken;
-
-                //if (!_db.Authenticate(user, out accesToken))
-                 //   throw new Exception("Неправвильное имя пользователя или пароль");
-                //else
-                //{
-                
-                return Ok(new
+                string accesToken;
+                if (_db.Authenticate(user, out accesToken))
+                    return Ok(new
                     {
-                        access_token = accesToken
+                        accessToken = accesToken
                     });
-                //}
+                else throw new Exception("Неправвильное имя пользователя или пароль");
             }
             catch (Exception ex)
             {
-                throw new Exception("Неправвильное имя пользователя или пароль")
                 return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
                 
         }
-        /*
+        
         [HttpPost]
         [Route("api/[controller]/RefreshToken")]
-        public IActionResult RefreshToken([FromBody] RefreshToken refreshTokenRequest)
+        public IActionResult RefreshToken([FromBody] string token)
         {
             try
             {
-                var refreshedAccessToken = RefreshToken(refreshTokenRequest.RefreshToken, "_da_ya_sosu_bibu1488");
-                return Ok(new { AccessToken = refreshedAccessToken });
-            }
-            catch (SecurityTokenException ex)
-            {
-                return BadRequest(ex.Message);
+                if (TokenUtilities.isTokenValid(token))
+                {
+                    User user = _db.GetUserFromToken(token);
+                var refreshedAccessToken = _db.RefreshToken(user,token);
+                return Ok(new { accessToken = refreshedAccessToken });                    
+                }
+                else throw new Exception("Обновление токена не удалось");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
         }
-        */
+        
     }
 }
