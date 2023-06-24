@@ -7,7 +7,7 @@ namespace SkipperBack3.Model
     {
         public const string ISSUER = "MyAuthServer";
         public const string AUDIENCE = "MyAuthClient"; 
-        public const string KEY = "_da_ya_sosu_bibu1488";
+        public const string KEY = "ya_sosu_bibu1488";
 
         public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
