@@ -17,9 +17,8 @@ public partial class User
 
     public bool? IsMentor { get; set; }
 
-    public string Bio { get; set; } = null!;
-
-    public string Post { get; set; } = null!;
+    public string? Bio { get; set; }
+    public string? Post { get; set; }
 
     public byte[]? Avatar { get; set; }
 
@@ -27,9 +26,8 @@ public partial class User
 
     public int ReviewsCount { get; set; }
 
-    public long UpdatedAt { get; set; }
-
-    public long CreatedAt { get; set; }
+    public long UpdatedAt { get; set; } = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    public long CreatedAt { get; set; } = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
     public virtual ICollection<BookedLesson> BookedLessons { get; set; } = new List<BookedLesson>();
 

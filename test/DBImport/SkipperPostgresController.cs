@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SkipperBack3.DBImport;
 
-public partial class ShopingPostgresContext : DbContext
+public partial class SkipperPostgresController : DbContext
 {
-    public ShopingPostgresContext()
+    public SkipperPostgresController()
     {
     }
 
-    public ShopingPostgresContext(DbContextOptions<ShopingPostgresContext> options)
+    public SkipperPostgresController(DbContextOptions<SkipperPostgresController> options)
         : base(options)
     {
     }

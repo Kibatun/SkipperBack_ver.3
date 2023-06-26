@@ -6,9 +6,9 @@ namespace SkipperBack3.Model
 {
     public class DbHelper
     {
-        private ShopingPostgresContext _context/*EF_DataContext _context*/;
+        private SkipperPostgresController _context/*EF_DataContext _context*/;
 
-        public DbHelper(ShopingPostgresContext context)/*(EF_DataContext context)*/
+        public DbHelper(SkipperPostgresController context)/*(EF_DataContext context)*/
         {
             _context = context;
         }
@@ -38,11 +38,11 @@ namespace SkipperBack3.Model
             return true;
         }
 
-        public bool Authenticate(User user, out string accessToken)
+        public bool Authenticate(string email, string password, out string accessToken)
         {
             accessToken = null;
-            bool isAuthenticated = _context.Users.Any(x => x.Email.Equals(user.Email) && x.PasswordHash.Equals(user.PasswordHash));
-            if (isAuthenticated)
+            var user = _context.Users.FirstOrDefault(x => x.Email.Equals(email));
+            if (user != null && user.PasswordHash.Equals(Utilities.GetHashString(password)))
             {
                 accessToken = TokenUtilities.GenerateAccessToken(user);
                 var refreshToken = TokenUtilities.GenerateRefreshToken(user.Uid);
@@ -54,6 +54,7 @@ namespace SkipperBack3.Model
             }
             return false;
         }
+
 
         public void RemoveExpiredRefreshTokens(User user)
         {

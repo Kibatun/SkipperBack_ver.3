@@ -10,12 +10,23 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SkipperBack3.Controllers
 {
+    public class LoginRequestModel
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+
+    public class TokenModel
+    {
+        public string token { get; set; }
+    }
+
     [ApiController]
-    public class ShoppingApiController : ControllerBase
+    public class SkipperAPIController : ControllerBase
     {
         private readonly DbHelper _db;
 
-        public ShoppingApiController (ShopingPostgresContext skipper_DdataContext) /*(EF_DataContext eF_DataContext)*/
+        public SkipperAPIController (SkipperPostgresController skipper_DdataContext) /*(EF_DataContext eF_DataContext)*/
         {
             _db = new DbHelper(skipper_DdataContext);//(eF_DataContext);
         }
@@ -49,37 +60,47 @@ namespace SkipperBack3.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("api/[controller]/Login")]
-        public IActionResult Login([FromBody] User user)
+        public IActionResult Login([FromBody] LoginRequestModel request)
         {
             try
             {
                 ResponseType type = ResponseType.Success;
-                string accesToken;
-                if (_db.Authenticate(user, out accesToken))
+                string accessToken;
+                if (_db.Authenticate(request.Email, request.Password, out accessToken))
+                {
                     return Ok(new
                     {
-                        accessToken = accesToken
+                        accessToken = accessToken
                     });
-                else throw new Exception("Неправвильное имя пользователя или пароль");
+                }
+                else
+                {
+                    throw new Exception("Неправильное имя пользователя или пароль");
+                }
             }
             catch (Exception ex)
             {
                 return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
-                
         }
-        
+
+        /// <summary>
+        /// Обновление токена доступа
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("api/[controller]/RefreshToken")]
-        public IActionResult RefreshToken([FromBody] string token)
+        public IActionResult RefreshToken([FromBody] TokenModel tokenModel)
         {
             try
             {
+                string token = tokenModel.token;
                 if (TokenUtilities.isTokenValid(token))
                 {
                     User user = _db.GetUserFromToken(token);
-                var refreshedAccessToken = _db.RefreshToken(user,token);
-                return Ok(new { accessToken = refreshedAccessToken });                    
+                    var refreshedAccessToken = _db.RefreshToken(user, token);
+                    return Ok(new { accessToken = refreshedAccessToken });
                 }
                 else throw new Exception("Обновление токена не удалось");
             }
@@ -88,6 +109,6 @@ namespace SkipperBack3.Controllers
                 return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
         }
-        
+
     }
 }
