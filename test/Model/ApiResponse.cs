@@ -1,4 +1,4 @@
-﻿namespace SkipperWebApi.Model
+﻿namespace SkipperBack3.Model
 {
     public class ApiResponse
     {

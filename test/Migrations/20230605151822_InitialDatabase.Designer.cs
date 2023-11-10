@@ -5,13 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using SkipperBack3.DBImport;
 using SkipperBack3.EFCore;
 
 #nullable disable
 
 namespace SkipperBack3.Migrations
 {
-    [DbContext(typeof(EF_DataContext))]
+    [DbContext(typeof(SkipperDBContext))]
     [Migration("20230605151822_InitialDatabase")]
     partial class InitialDatabase
     {
@@ -78,7 +79,7 @@ namespace SkipperBack3.Migrations
                     b.ToTable("user");
                 });
 
-            modelBuilder.Entity("SkipperWebApi.EfCore.Order", b =>
+            modelBuilder.Entity("SkipperBack3.EfCore.Order", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -108,7 +109,7 @@ namespace SkipperBack3.Migrations
                     b.ToTable("order");
                 });
 
-            modelBuilder.Entity("SkipperWebApi.EfCore.Product", b =>
+            modelBuilder.Entity("SkipperBack3.EfCore.Product", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -135,9 +136,9 @@ namespace SkipperBack3.Migrations
                     b.ToTable("product");
                 });
 
-            modelBuilder.Entity("SkipperWebApi.EfCore.Order", b =>
+            modelBuilder.Entity("SkipperBack3.EfCore.Order", b =>
                 {
-                    b.HasOne("SkipperWebApi.EfCore.Product", "Product")
+                    b.HasOne("SkipperBack3.EfCore.Product", "Product")
                         .WithMany()
                         .HasForeignKey("Productid")
                         .OnDelete(DeleteBehavior.Cascade)

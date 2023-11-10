@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SkipperWebApi.EfCore
+namespace SkipperBack3.EfCore
 {
     [Table("product")]
     public class Product
