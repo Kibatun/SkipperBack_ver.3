@@ -26,7 +26,7 @@ namespace SkipperBack3.Controllers
     {
         private readonly DbHelper _db;
 
-        public SkipperAPIController (SkipperPostgresController skipper_DdataContext) /*(EF_DataContext eF_DataContext)*/
+        public SkipperAPIController (SkipperDBContext skipper_DdataContext) /*(EF_DataContext eF_DataContext)*/
         {
             _db = new DbHelper(skipper_DdataContext);//(eF_DataContext);
         }
@@ -70,7 +70,7 @@ namespace SkipperBack3.Controllers
                 {
                     return Ok(new
                     {
-                        accessToken = accessToken
+                        accessToken
                     });
                 }
                 else
@@ -103,6 +103,25 @@ namespace SkipperBack3.Controllers
                     return Ok(new { accessToken = refreshedAccessToken });
                 }
                 else throw new Exception("Обновление токена не удалось");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+        }
+
+        /// <summary>
+        /// Получить список всех категорий
+        /// </summary>
+        /// <returns>Массив объектов категорий</returns>
+        [HttpGet]
+        [Route("api/[controller]/GetCategories")]
+        public IActionResult GetCategories()
+        {
+            try
+            {
+                Category[] categories = _db.GetCategories();
+                return Ok(categories);
             }
             catch (Exception ex)
             {

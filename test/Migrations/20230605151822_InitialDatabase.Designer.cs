@@ -5,13 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using SkipperBack3.DBImport;
 using SkipperBack3.EFCore;
 
 #nullable disable
 
 namespace SkipperBack3.Migrations
 {
-    [DbContext(typeof(EF_DataContext))]
+    [DbContext(typeof(SkipperDBContext))]
     [Migration("20230605151822_InitialDatabase")]
     partial class InitialDatabase
     {

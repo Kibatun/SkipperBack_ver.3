@@ -6,9 +6,9 @@ namespace SkipperBack3.Model
 {
     public class DbHelper
     {
-        private SkipperPostgresController _context/*EF_DataContext _context*/;
+        private SkipperDBContext _context/*EF_DataContext _context*/;
 
-        public DbHelper(SkipperPostgresController context)/*(EF_DataContext context)*/
+        public DbHelper(SkipperDBContext context)/*(EF_DataContext context)*/
         {
             _context = context;
         }
@@ -103,6 +103,20 @@ namespace SkipperBack3.Model
             return user;
         }
 
+        public Category[] GetCategories()
+        {
+            var categories = _context.Categories
+                .Select(c => new Category
+                {
+                    Id = c.Id,
+                    Key = c.Key,
+                    Name = c.Name,
+                    Subcategories = c.Subcategories
+                })
+                .ToArray();
+
+            return categories;
+        }
         /*
         public void RefreshToken(string token, User user)
         {

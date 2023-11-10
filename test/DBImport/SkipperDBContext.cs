@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SkipperBack3.DBImport;
 
-public partial class SkipperPostgresController : DbContext
+public partial class SkipperDBContext : DbContext
 {
-    public SkipperPostgresController()
+    public SkipperDBContext()
     {
     }
 
-    public SkipperPostgresController(DbContextOptions<SkipperPostgresController> options)
+    public SkipperDBContext(DbContextOptions<SkipperDBContext> options)
         : base(options)
     {
     }
@@ -25,9 +25,11 @@ public partial class SkipperPostgresController : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<Category> Categories { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Server=localhost;Database=shopingPostgres;Port=5432;User Id=postgres;Password=1488;");
+        => optionsBuilder.UseNpgsql("Server=localhost;Database=skipperDB;Port=5432;User Id=postgres;Password=1488;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -148,6 +150,14 @@ public partial class SkipperPostgresController : DbContext
             entity.Property(e => e.Rating).HasColumnName("rating");
             entity.Property(e => e.ReviewsCount).HasColumnName("reviews_count");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+        });
+
+        modelBuilder.Entity<Category>().HasData(new Category
+        {
+            Id = Guid.NewGuid(),
+            Key = "development",
+            Name = "разработка",
+            Subcategories = new string[] { "backend", "frontend" }
         });
 
         OnModelCreatingPartial(modelBuilder);
