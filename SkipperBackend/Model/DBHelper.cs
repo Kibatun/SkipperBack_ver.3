@@ -97,11 +97,17 @@ namespace SkipperBack3.Model
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwtToken = tokenHandler.ReadJwtToken(token);
 
-            // Извлекаем значения из полезной нагрузки (payload) токена
             var userId = new Guid (jwtToken.Claims.FirstOrDefault(c => c.Type == "uuid")?.Value);
             var user = _context.Users.FirstOrDefault(u => u.Uid == userId);
             return user;
         }
+
+        public User GetUserByID(Guid uid)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Uid == uid);
+            return user;
+        }
+
 
         public Category[] GetCategories()
         {

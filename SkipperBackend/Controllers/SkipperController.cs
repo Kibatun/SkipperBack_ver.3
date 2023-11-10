@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using SkipperBack3.DBImport;
 using SkipperBack3.Model;
 using SkipperBack3.TokenUtils;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -133,12 +136,34 @@ namespace SkipperBack3.Controllers
         {
             try
             {
-                var user = HttpContext.User;
+                ///Синхронизировать Authorization с фронтом
+                ///https://github.com/inpad-ru/InpadPluginsProxy/blob/1.0.5/InpadPluginsProxy/Helpers/AuthorizeAttribute.cs
+                ///https://github.com/inpad-ru/InpadPluginsProxy/blob/1.0.5/InpadPluginsProxy/Helpers/JwtMiddleware.cs
+                var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                // min 16 characters
+                var key = Encoding.UTF8.GetBytes(AuthOptions.KEY);
+                SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = securityKey,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero,
+                }, out SecurityToken validatedToken);
+
+                var jwtToken = (JwtSecurityToken)validatedToken;
+                var userId = Guid.Parse(jwtToken.Claims.First(x => x.Type == "uuid").Value);
+
+                var user = _db.GetUserByID(userId);
+
                 var userInfo = new
                 {
-                    UserId = user.FindFirst("sub")?.Value,
-                    UserName = user.Identity?.Name,
-                    // Другие поля пользователя, которые вам нужны
+                    UserId = user.Uid,
+                    UserName = user.FirstName,
                 };
 
                 return Ok(userInfo);
