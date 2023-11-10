@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using SkipperBack3.DBImport;
-//using SkipperBack3.EFCore;
 using SkipperBack3.Model;
 using SkipperBack3.TokenUtils;
-using Swashbuckle.AspNetCore.Annotations;
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SkipperBack3.Controllers
@@ -26,10 +23,11 @@ namespace SkipperBack3.Controllers
     {
         private readonly DbHelper _db;
 
-        public SkipperAPIController (SkipperDBContext skipper_DdataContext) /*(EF_DataContext eF_DataContext)*/
+        public SkipperAPIController(SkipperDBContext skipper_DdataContext)
         {
-            _db = new DbHelper(skipper_DdataContext);//(eF_DataContext);
+            _db = new DbHelper(skipper_DdataContext);
         }
+
         /// <summary>
         /// Добавление пользователя в БД
         /// </summary>
@@ -128,6 +126,5 @@ namespace SkipperBack3.Controllers
                 return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
         }
-
     }
 }
