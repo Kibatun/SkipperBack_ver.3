@@ -126,5 +126,27 @@ namespace SkipperBack3.Controllers
                 return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
         }
+
+        [HttpGet]
+        [Route("api/[controller]/GetMe")]
+        public IActionResult GetMe()
+        {
+            try
+            {
+                var user = HttpContext.User;
+                var userInfo = new
+                {
+                    UserId = user.FindFirst("sub")?.Value,
+                    UserName = user.Identity?.Name,
+                    // Другие поля пользователя, которые вам нужны
+                };
+
+                return Ok(userInfo);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+        }
     }
 }
