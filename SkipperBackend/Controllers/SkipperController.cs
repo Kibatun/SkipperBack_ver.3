@@ -6,6 +6,8 @@ using SkipperBack3.TokenUtils;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
+
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SkipperBack3.Controllers
@@ -136,10 +138,9 @@ namespace SkipperBack3.Controllers
         {
             try
             {
-                ///Синхронизировать Authorization с фронтом
                 ///https://github.com/inpad-ru/InpadPluginsProxy/blob/1.0.5/InpadPluginsProxy/Helpers/AuthorizeAttribute.cs
                 ///https://github.com/inpad-ru/InpadPluginsProxy/blob/1.0.5/InpadPluginsProxy/Helpers/JwtMiddleware.cs
-                var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                var token = HttpContext.Request.Headers["Bearer"].FirstOrDefault()?.Split(" ").Last();
 
 
                 var tokenHandler = new JwtSecurityTokenHandler();
@@ -157,13 +158,55 @@ namespace SkipperBack3.Controllers
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var userId = Guid.Parse(jwtToken.Claims.First(x => x.Type == "uuid").Value);
-
                 var user = _db.GetUserByID(userId);
+                var userBio = user.Bio;
+                var userEmail = user.Email;
+                var userFirsName = user.FirstName;
+                var userImageURL = user.Avatar;
+                var userLastName = user.LastName;
+                var userPost = user.Post;
 
                 var userInfo = new
                 {
-                    UserId = user.Uid,
-                    UserName = user.FirstName,
+                    bio = userBio,
+                    email = userEmail,
+                    first_name = userFirsName,
+                    image_url = userImageURL,
+                    last_name = userLastName,
+                    post = userPost
+                };
+
+                return Ok(userInfo);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+        }
+
+        [HttpGet]
+        [Route("api/[controller]/GetUserById")]
+        public IActionResult GetUserById(Guid uuid)
+        {
+            try
+            {
+                var userId = uuid;
+                var user = _db.GetUserByID(userId);
+                var userBio = user.Bio;
+                var userEmail = user.Email;
+                var userFirsName = user.FirstName;
+                var userImageURL = user.Avatar;
+                var userLastName = user.LastName;
+                var userPost = user.Post;
+
+                var userInfo = new
+                {
+                    bio = userBio,
+                    email = userEmail,
+                    first_name = userFirsName,
+                    image_url = userImageURL,
+                    last_name = userLastName,
+                    post = userPost
                 };
 
                 return Ok(userInfo);

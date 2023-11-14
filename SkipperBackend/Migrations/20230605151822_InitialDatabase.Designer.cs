@@ -50,7 +50,7 @@ namespace SkipperBack3.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsMenor")
+                    b.Property<bool>("IsMentor")
                         .HasColumnType("boolean");
 
                     b.Property<string>("LastName")

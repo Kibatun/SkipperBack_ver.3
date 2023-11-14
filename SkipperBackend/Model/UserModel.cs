@@ -9,7 +9,7 @@ namespace SkipperBack3.EFCore
         public string PasswordHash { get; set; } = null!;
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
-        public bool IsMenor { get; set; } = false;
+        public bool IsMentor { get; set; } = false;
         public string Bio { get; set; } = null!;
         public string Post { get; set; } = null!;
         public byte[]? Avatar { get; set; }
