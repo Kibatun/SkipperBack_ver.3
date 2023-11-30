@@ -70,15 +70,11 @@ namespace SkipperBack3.Model
                 Guid userGuid = user.Uid;
                 //TODO: по какой-то причине у пользователя 0 рефреш токенов
                 var refreshToken = _context.RefreshTokens.OrderByDescending(x => x.ExpiresAt).FirstOrDefault(x => x.UserId == userGuid);
-                //var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
-                if (!refreshToken.IsRevoked)
+                if (refreshToken?.IsRevoked == false)
                 {
                     var newRefreshToken = TokenUtilities.GenerateRefreshToken(user.Uid);
-                    //user.RefreshTokens.Remove(refreshToken);
-                    //user.RefreshTokens.Clear();
                     user.RefreshTokens.Add(newRefreshToken);
                     RemoveExpiredRefreshTokens(user);
-                    //foreach (var tok in user.RefreshTokens)
                     _context.Update(user);
                     _context.SaveChanges();
                     var newAccessToken = TokenUtilities.GenerateAccessToken(user);
@@ -123,28 +119,5 @@ namespace SkipperBack3.Model
 
             return categories;
         }
-        /*
-        public void RefreshToken(string token, User user)
-        {
-            string refreshToken = user.RefreshTokens.Single(x => x.Token == token);
-            if (refreshToken.IsRevoked)
-            {
-                TokenUtilities.RevokeChildTokens(refreshToken, user);
-                _context.Update(user);
-                _context.SaveChanges();
-            }
-            if (refreshToken.IsActive)
-                throw new Exception("Неверный статус токена обновления");
-
-            var newRefreshToken = ;
-            user.RefreshTokens.Add(newRefreshToken);
-            RemoveOldRefreshTokens(user);
-            foreach (var token in user.RefreshTokens)
-                _context.Update(user);
-            _context.SaveChanges();
-            var jwtToken = TokenUtilities.GenerateAccessToken(user);
-            return jwtToken;
-        }
-        */
     }
 }

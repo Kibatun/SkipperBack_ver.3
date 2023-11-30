@@ -67,7 +67,6 @@ namespace SkipperBack3.Controllers
         {
             try
             {
-                ResponseType type = ResponseType.Success;
                 string accessToken;
                 if (_db.Authenticate(request.Email, request.Password, out accessToken))
                 {
@@ -155,7 +154,7 @@ namespace SkipperBack3.Controllers
                     ValidateAudience = false,
                     ClockSkew = TimeSpan.Zero,
                 }, out SecurityToken validatedToken);
-
+                ///Добавить проверку и ошибку, если токен прод
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var userId = Guid.Parse(jwtToken.Claims.First(x => x.Type == "uuid").Value);
                 var user = _db.GetUserByID(userId);
@@ -165,15 +164,17 @@ namespace SkipperBack3.Controllers
                 var userImageURL = user.Avatar;
                 var userLastName = user.LastName;
                 var userPost = user.Post;
+                var isUserMentor = user.IsMentor;
 
                 var userInfo = new
                 {
-                    bio = userBio,
                     email = userEmail,
                     first_name = userFirsName,
-                    image_url = userImageURL,
                     last_name = userLastName,
-                    post = userPost
+                    image_url = userImageURL,
+                    post = userPost,
+                    bio = userBio,
+                    is_mentor = isUserMentor
                 };
 
                 return Ok(userInfo);
@@ -198,15 +199,17 @@ namespace SkipperBack3.Controllers
                 var userImageURL = user.Avatar;
                 var userLastName = user.LastName;
                 var userPost = user.Post;
+                var isUserMentor = user.IsMentor;
 
                 var userInfo = new
                 {
-                    bio = userBio,
                     email = userEmail,
                     first_name = userFirsName,
-                    image_url = userImageURL,
                     last_name = userLastName,
-                    post = userPost
+                    image_url = userImageURL,
+                    post = userPost,
+                    bio = userBio,
+                    is_mentor = isUserMentor
                 };
 
                 return Ok(userInfo);
