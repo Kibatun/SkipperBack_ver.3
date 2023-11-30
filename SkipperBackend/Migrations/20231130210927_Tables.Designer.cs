@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SkipperBack3.DBImport;
@@ -11,9 +12,11 @@ using SkipperBack3.DBImport;
 namespace SkipperBack3.Migrations
 {
     [DbContext(typeof(SkipperDBContext))]
-    partial class SkipperDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231130210927_Tables")]
+    partial class Tables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -16,16 +16,19 @@ public partial class SkipperDBContext : DbContext
     }
 
     public virtual DbSet<BookedLesson> BookedLessons { get; set; }
-
+    public virtual DbSet<Category> Categories { get; set; }
+    public virtual DbSet<Lesson> Lessons { get; set; }
     public virtual DbSet<LessonDuration> LessonDurations { get; set; }
-
+    public virtual DbSet<LessonSlot> LessonSlots { get; set; }
+    public virtual DbSet<Mentor> Mentors { get; set; }
+    public virtual DbSet<MentorStat> MentorStats { get; set; }
+    public virtual DbSet<MentorTag> MentorTags { get; set; }
     public virtual DbSet<MessengerInfo> MessengerInfos { get; set; }
-
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
-
+    public virtual DbSet<Tag> Tags { get; set; }
+    public virtual DbSet<TimeSLot> TimeSLot { get; set; }
     public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<Category> Categories { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
